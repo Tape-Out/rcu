@@ -1,0 +1,27 @@
+ip: rcu
+contract: { aw: 8, dw: 32 }
+base: 0x1000A000
+size: 0x100
+params: [domains]
+regs:
+  - name: gate
+    offset: 0x00
+    desc: clock gate per domain
+    fields: [ { name: val, width: 16, sw: rw, hw: r, reset: 0 } ]
+  - name: rstn
+    offset: 0x04
+    desc: reset release per domain
+    fields: [ { name: val, width: 16, sw: rw, hw: r, reset: 0 } ]
+  - name: div
+    offset: 0x10
+    desc: divider per domain
+    array: { count: domains, stride: 4 }
+    fields: [ { name: val, bits: "7:0", sw: rw, hw: r, reset: 1 } ]
+  - name: pllcfg
+    offset: 0x60
+    desc: pll configuration
+    feature: pll
+    fields:
+      - { name: mult, bits: "6:0",  sw: rw, hw: r, reset: 1 }
+      - { name: divr, bits: "13:8", sw: rw, hw: r, reset: 1 }
+      - { name: lock, bits: "31:31", sw: r, hw: w, volatile: true }

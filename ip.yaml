@@ -1,0 +1,28 @@
+name: rcu
+version: 0.1.0
+spec: "0.1"
+kind: ip
+lang: bsv
+identity:
+  slug: rcu-tapeout-bsv
+  display_name: Reset and clock unit
+  summary: Gating, dividers and reset sequencing in one module.
+  category: peripheral
+  subcategories: [clock, reset]
+  ip_family: rcu
+  integration_profile: [apb4-slave]
+  maturity: planned
+contract:
+  version: 1
+  ctrl: { shape: flat, aw: 8, dw: 32 }
+params:
+  domains: { type: int, default: 4, range: [1, 16] }
+features:
+  pll: { type: bool, default: false }
+emit:
+  - kind: bsv
+    package: Rcu
+    module: mkRcu
+    config_type: RcuCfg
+    interface: RcuIfc
+deps: { hwcore: "^0.1" }
