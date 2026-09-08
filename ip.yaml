@@ -1,6 +1,6 @@
 name: rcu
 version: 0.1.0
-spec: "0.1"
+spec: '0.1'
 kind: ip
 lang: bsv
 identity:
@@ -8,21 +8,44 @@ identity:
   display_name: Reset and clock unit
   summary: Gating, dividers and reset sequencing in one module.
   category: peripheral
-  subcategories: [clock, reset]
+  subcategories:
+  - clock
+  - reset
   ip_family: rcu
-  integration_profile: [apb4-slave]
+  integration_profile:
+  - apb4-slave
   maturity: planned
 contract:
   version: 1
-  ctrl: { shape: flat, aw: 8, dw: 32 }
+  ctrl:
+    shape: flat
+    aw: 8
+    dw: 32
 params:
-  domains: { type: int, default: 4, range: [1, 16] }
+  domains:
+    type: int
+    default: 4
+    range:
+    - 1
+    - 16
 features:
-  pll: { type: bool, default: false }
+  pll:
+    type: bool
+    default: false
 emit:
-  - kind: bsv
-    package: Rcu
-    module: mkRcu
-    config_type: RcuCfg
-    interface: RcuIfc
-deps: { hwcore: "^0.1" }
+- kind: bsv
+  package: Rcu
+  module: mkRcu
+  config_type: RcuCfg
+  interface: RcuIfc
+  ctrl: regs
+  pins:
+  - name: pins
+    type: RcuPins
+    targs:
+    - domains
+- kind: verilog-flat
+  bus: apb4
+deps:
+  hwcore: ^0.1
+  amba: ^0.1

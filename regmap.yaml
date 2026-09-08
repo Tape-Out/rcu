@@ -7,11 +7,11 @@ regs:
   - name: gate
     offset: 0x00
     desc: clock gate per domain
-    fields: [ { name: val, width: 16, sw: rw, hw: r, reset: 0 } ]
+    fields: [ { name: val, width: domains, sw: rw, hw: r, reset: 0 } ]
   - name: rstn
     offset: 0x04
     desc: reset release per domain
-    fields: [ { name: val, width: 16, sw: rw, hw: r, reset: 0 } ]
+    fields: [ { name: val, width: domains, sw: rw, hw: r, reset: 0 } ]
   - name: div
     offset: 0x10
     desc: divider per domain
