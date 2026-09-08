@@ -34,10 +34,10 @@ features:
     default: false
     area:
       points:
-        '2': 158.48
-        '4': 257.32
-        '8': 269.08
-        '16': 47.6
+        '2': 154.56
+        '4': 134.12
+        '8': 134.4
+        '16': -227.92
       per: domains
 emit:
 - kind: bsv
@@ -59,55 +59,55 @@ deps:
 area:
   base:
     points:
-      '2': 670.6
-      '4': 1227.52
-      '8': 2409.68
-      '16': 4841.2
+      '2': 654.08
+      '4': 1349.88
+      '8': 2450.0
+      '16': 5103.28
     per: domains
-  margin: 0.0629
+  margin: 0.0331
   model: points-additive
   error:
-    bound: 0.112
+    bound: 0.073
     sign: over
     note: parameter curves stored as measured points, features added on top, then
-      lifted by 0.0629 so that no untested combination predicts under; the worst came
-      in 5.79 percent under before the lift
+      lifted by 0.0331 so that no untested combination predicts under; the worst came
+      in 2.81 percent under before the lift
   measured:
   - at:
       domains: 2
       pll: false
-    um2: 670.6
+    um2: 654.08
   - at:
       domains: 4
       pll: false
-    um2: 1227.52
+    um2: 1349.88
   - at:
       domains: 8
       pll: false
-    um2: 2409.68
+    um2: 2450.0
   - at:
       domains: 16
       pll: false
-    um2: 4841.2
+    um2: 5103.28
   - at:
       domains: 2
       pll: true
-    um2: 829.08
+    um2: 808.64
   - at:
       domains: 4
       pll: true
-    um2: 1484.84
+    um2: 1484.0
   - at:
       domains: 8
       pll: true
-    um2: 2678.76
+    um2: 2584.4
   - at:
       domains: 16
       pll: true
-    um2: 4888.8
+    um2: 4875.36
   corner:
     tool: ecc
     pdk: ics55
     freq_mhz: 100
-    measured: '2026-09-08'
-    gen_digest: sha256:8cc3e2c4ea51b272
+    measured: '2026-09-09'
+    gen_digest: sha256:14bdb3f4873db8b9
