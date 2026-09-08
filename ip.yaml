@@ -32,6 +32,13 @@ features:
   pll:
     type: bool
     default: false
+    area:
+      points:
+        '2': 158.48
+        '4': 257.32
+        '8': 269.08
+        '16': 47.6
+      per: domains
 emit:
 - kind: bsv
   package: Rcu
@@ -49,3 +56,58 @@ emit:
 deps:
   hwcore: ^0.1
   amba: ^0.1
+area:
+  base:
+    points:
+      '2': 670.6
+      '4': 1227.52
+      '8': 2409.68
+      '16': 4841.2
+    per: domains
+  margin: 0.0629
+  model: points-additive
+  error:
+    bound: 0.112
+    sign: over
+    note: parameter curves stored as measured points, features added on top, then
+      lifted by 0.0629 so that no untested combination predicts under; the worst came
+      in 5.79 percent under before the lift
+  measured:
+  - at:
+      domains: 2
+      pll: false
+    um2: 670.6
+  - at:
+      domains: 4
+      pll: false
+    um2: 1227.52
+  - at:
+      domains: 8
+      pll: false
+    um2: 2409.68
+  - at:
+      domains: 16
+      pll: false
+    um2: 4841.2
+  - at:
+      domains: 2
+      pll: true
+    um2: 829.08
+  - at:
+      domains: 4
+      pll: true
+    um2: 1484.84
+  - at:
+      domains: 8
+      pll: true
+    um2: 2678.76
+  - at:
+      domains: 16
+      pll: true
+    um2: 4888.8
+  corner:
+    tool: ecc
+    pdk: ics55
+    freq_mhz: 100
+    measured: '2026-09-08'
+    gen_digest: sha256:8cc3e2c4ea51b272
