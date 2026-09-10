@@ -31,6 +31,44 @@ div1_setup = ("      2: wr(8'h14, 4);            // div[1] 除四"
 beat1 = ("      if (e[1] == 1) n1[0] <= n1[0] + 1;" if second
          else "      // 只有一个域")
 
+# PLL 没锁定就放开复位，逻辑会在时钟还没稳的时候开始跑。这一段只在 pll 开着时有意义。
+lock_phases = ("Unlock, CheckUnlock, Relock, CheckRelock, " if pll else "")
+lock_next = "Unlock" if pll else "Done"
+lock_rules = ('''
+  // PLL 还没锁定就放开复位，逻辑会在时钟不稳的时候开始跑。这一路此前从没被走过——
+  // 测试台把 pll_locked 焊死成 1，而实现只把它拿去填状态位。
+  rule unlock (ph == Unlock);
+    if (s == 0) lockIn <= 0;
+    if (s > 6) begin ph <= CheckUnlock; s <= 0; end
+    else s <= s + 1;
+  endrule
+
+  rule checkUnlock (ph == CheckUnlock);
+    if (rstSeen[1] != 0) begin
+      $display("FAIL reset released while the pll was unlocked: rst_n is %08h",
+               rstSeen[1]);
+      bad <= True;
+    end
+    ph <= Relock;
+    s  <= 0;
+  endrule
+
+  rule relock (ph == Relock);
+    if (s == 0) lockIn <= 1;
+    if (s > 6) begin ph <= CheckRelock; s <= 0; end
+    else s <= s + 1;
+  endrule
+
+  // 反过来也要验：锁上之后复位必须真的放开，否则「一直压着」也能骗过上一条
+  rule checkRelock (ph == CheckRelock);
+    if (rstSeen[1] == 0) begin
+      $display("FAIL the pll locked but reset stayed asserted");
+      bad <= True;
+    end
+    ph <= Done;
+  endrule
+''' if pll else "")
+
 div1_check = ('''    // 二号域除四：四拍里只该放行一次，宽松点判也足够分得开
     if (n1[1] > (n0[1] >> 1) || n1[1] < 4) begin
       $display("FAIL domain 1 divides by four but beat %0d of %0d cycles",
@@ -72,7 +110,7 @@ import Rcu::*;
 
 // 由 tb/mkrcutb.py 生成，勿手改。这一点：domains={doms} pll={pll}
 
-typedef enum {{ Setup, Count, Gate, GateCheck, Check, Done }}
+typedef enum {{ Setup, Count, Gate, GateCheck, Check, {lock_phases}Done }}
   Phase deriving (Bits, Eq);
 
 (* synthesize *)
@@ -92,8 +130,11 @@ module mkRcu{label}Tb(Empty);
   Reg#(Bit#(7)) pmSeen[2]  <- mkCReg(2, 0);
   Reg#(Bit#(6)) prSeen[2]  <- mkCReg(2, 0);
 
+  // 锁定信号由测试台驱动，好把「还没锁定」那一路走一遍
+  Reg#(Bit#(1)) lockIn <- mkReg(1);
+
   rule drivePins;
-    d.pins.pll_locked(1);
+    d.pins.pll_locked(lockIn);
   endrule
 
   rule samplePins;
@@ -174,9 +215,10 @@ module mkRcu{label}Tb(Empty);
 {pll_check}
 {arr_check}
     if (wrong) bad <= True;
-    ph <= Done;
+    ph <= {lock_next};
+    s  <= 0;
   endrule
-
+{lock_rules}
   rule fin (ph == Done);
     if (bad) $display("FAILED");
     else $display("PASS rcu: {verdict}");

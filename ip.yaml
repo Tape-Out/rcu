@@ -34,10 +34,10 @@ features:
     default: false
     area:
       points:
-        '2': 154.56
-        '4': 134.12
-        '8': 134.4
-        '16': -227.92
+        '2': 160.44
+        '4': 64.96
+        '8': 244.72
+        '16': 219.8
       per: domains
 emit:
 - kind: bsv
@@ -69,9 +69,9 @@ area:
   error:
     bound: 0.073
     sign: over
-    note: parameter curves stored as measured points, features added on top, then
-      lifted by 0.0331 so that no untested combination predicts under; the worst came
-      in 2.81 percent under before the lift
+    note: parameter curves stored as measured points, features added on top, 
+      then lifted by 0.0331 so that no untested combination predicts under; the 
+      worst came in 2.81 percent under before the lift
   measured:
   - at:
       domains: 2
@@ -92,22 +92,23 @@ area:
   - at:
       domains: 2
       pll: true
-    um2: 808.64
+    um2: 814.52
   - at:
       domains: 4
       pll: true
-    um2: 1484.0
+    um2: 1414.84
   - at:
       domains: 8
       pll: true
-    um2: 2584.4
+    um2: 2694.72
   - at:
       domains: 16
       pll: true
-    um2: 4875.36
+    um2: 5323.08
   corner:
     tool: ecc
     pdk: ics55
     freq_mhz: 100
-    measured: '2026-09-09'
-    gen_digest: sha256:14bdb3f4873db8b9
+    measured: '2026-09-11'
+    toolchain: bsc 2026.01 · yosys 0.68+195 · ecc 0.1.0a11
+    gen_digest: sha256:fb315398636742b0

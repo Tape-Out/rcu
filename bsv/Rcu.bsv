@@ -57,10 +57,19 @@ module mkRcu#(RcuCfg cfg)(RcuIfc#(aw, dw, domains))
     endrule
   end
 
+  // 复位要等时钟稳。PLL 没锁定就放开，逻辑会在时钟还没稳的时候开始跑——
+  // 「复位时序」这四个字指的就是这件事，而 pll_locked 此前只被拿去填状态位。
+  // 倍频为一时不过 PLL，不必等；特性关掉时这一支整个不例化。
+  function Bit#(domains) rstOut();
+    Bit#(domains) o = r.rstn;
+    if (cfg.pll && r.pllcfg_mult != 1 && locked == 0) o = 0;
+    return o;
+  endfunction
+
   interface regs = r.regs;
   interface RcuPins pins;
     method Bit#(domains) clk_en = r.gate & beat;
-    method Bit#(domains) rst_n  = r.rstn;
+    method Bit#(domains) rst_n  = rstOut();
     // 配了非一的倍频就当作要用 PLL
     method Bit#(1) pll_en = (cfg.pll && r.pllcfg_mult != 1) ? 1 : 0;
     method Bit#(7) pll_m  = cfg.pll ? r.pllcfg_mult : 1;
