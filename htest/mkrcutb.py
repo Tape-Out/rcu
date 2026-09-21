@@ -108,7 +108,7 @@ txt = f'''package Rcu{label}Tb;
 import RegIf::*;
 import Rcu::*;
 
-// 由 tb/mkrcutb.py 生成，勿手改。这一点：domains={doms} pll={pll}
+// 由 htest/mkrcutb.py 生成，勿手改。这一点：domains={doms} pll={pll}
 
 typedef enum {{ Setup, Count, Gate, GateCheck, Check, {lock_phases}Done }}
   Phase deriving (Bits, Eq);
